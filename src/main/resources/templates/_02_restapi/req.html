@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>=========== GET 요청 ===========</h1>
+<div style="display: flex">
+    <form action="/get/res1" method="get" style="margin-right: 20px">
+        <h3>Get 전송 (required = true)</h3>
+            이름 : <input type="text" name="name">
+            나이 : <input type="number" name="age">
+        <br>
+        <button>Get 전송</button>
+    </form>
+    <form action="/get/res2" method="get" style="margin-right: 20px">
+        <h3>Get 전송 (required = false)</h3>
+<!--            이름 : <input type="text" name="name">-->
+<!--            나이 : <input type="number" name="age">-->
+        <br>
+        <button>Get 전송</button>
+    </form>
+</div>
+
+<div style="margin-right: 20px;">
+        <h3>Get 전송 - ~/{param1}/{param2}</h3>
+        <a href="/get/res3/홍길동/20">/get/res3/홍길동/20</a>
+        <br>
+</div>
+        <a href="/get/res3/홍길동">
+            /get/res3/홍길동
+        </a>
+
+<div style="margin-right: 20px;">
+        <h3>Get 전송 - ~/{name}/{age}</h3>
+        <a href="/get/res4/홍길동/20">
+            /get/res4/홍길동/20
+        </a>
+        <br>
+</div>
+<a href="/get/res4/홍길동">
+    /get/res4/홍길동
+</a>
+
+<!--실습-->
+<div style="margin-right: 20px;">
+    <h3>실습</h3>
+    <a href="/introduce/홍길동">
+        내 이름은 홍길동
+    </a>
+</div>
+<form action="/introduce" method="get" style="margin-right: 20px">
+    이름 : <input type="text" name="name">
+    나이 : <input type="number" name="age">
+    <br>
+    <button>Get 전송</button>
+</form>
+
+<h1>=========== POST 요청 ===========</h1>
+<div style="display: flex">
+    <form action="/post/res1" method="post" style="margin-right: 20px">
+        <h3>post 전송 (required = true)</h3>
+        이름 : <input type="text" name="name" placeholder="이름">
+        나이 : <input type="number" name="age" placeholder="나이">
+        <br>
+        <button>post 전송</button>
+    </form>
+    <form action="/post/res2" method="post" style="margin-right: 20px">
+        <h3>Post 전송 (required = false)</h3>
+                    이름 : <input type="text" name="name">
+                    나이 : <input type="number" name="age">
+        <br>
+        <button>Post 전송</button>
+    </form>
+    <form action="/post/res3" method="post" style="margin-right: 20px">
+        <h3>Post 전송 (ResponseBody)</h3>
+        이름 : <input type="text" name="name">
+        나이 : <input type="number" name="age">
+        <br>
+        <button>Post 전송</button>
+    </form>
+</div>
+
+<!--실습2-->
+<h1>==========실습2==========</h1>
+<form action="/post/res4" method="post">
+    <label>이름 : </label>
+    <input type="text" name="name">
+    <br>
+    <label>성별 : </label>
+    <input type="radio" name="gender" value="남성"> 남성
+    <input type="radio" name="gender" value="여성"> 여성
+    <br>
+    <label>생년월일 : </label>
+    <input type="date" name="birthDate">
+    <br>
+    <label>관심사 : </label>
+    <input type="checkbox" name="interests" value="travel"> 여행
+    <input type="checkbox" name="interests" value="fation"> 패션
+    <input type="checkbox" name="interests" value="food"> 음식
+    <br>
+    <button type="submit">제출</button>
+</form>
+
+</body>
+</html>
