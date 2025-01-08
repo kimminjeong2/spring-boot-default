@@ -1,5 +1,7 @@
 package codingon.spring_boot_default.controller._02_restapi;
 
+import codingon.spring_boot_default.dto.UserDTO;
+import codingon.spring_boot_default.vo.UserVO;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -9,7 +11,9 @@ public class RestController {
 
     // ======== Template 렌더링 =========
     @GetMapping("/")
-    public String getReq() {return "_02_restapi/req"; }
+    public String getReq() {
+        return "_02_restapi/req";
+    }
 
     // ======== Get 요청 =========
     // 매게변수 넘겨받는 법
@@ -45,6 +49,7 @@ public class RestController {
         model.addAttribute("age", age);
         return "_02_restapi/res";
     }
+
     // 선택적으로 받아오는 PathVariable 이 있다면 경롤르 여러개 설정해야 함
     @GetMapping("/get/res4/{param1}/{param2}")
     public String getRes4(@PathVariable String name, @PathVariable(required = false) Integer age, Model model) {
@@ -58,12 +63,13 @@ public class RestController {
         return "_02_restapi/res";
     }
 
-    // 실습
+    // 실습 1
     @GetMapping("/introduce/{name}")
     public String introduce(@PathVariable("name") String name, Model model) {
         model.addAttribute("name", name);
         return "_02_restapi/res";
     }
+
     @GetMapping("/introduce")
     public String getRes5(@RequestParam(value = "name") String name, @RequestParam(value = "age") int age, Model model) {
         model.addAttribute("name", name);
@@ -96,11 +102,13 @@ public class RestController {
         model.addAttribute("age", age);
         return "_02_restapi/res";
     }
-    @PostMapping("/post/res4")
-    public String postRes4(@RequestParam String name,
+
+    // 실습 2
+    @PostMapping("/post/res7")
+    public String postRes7(@RequestParam String name,
                            @RequestParam String gender,
                            @RequestParam String birthDate,
-                           @RequestParam(value = "interests", required = false) String[] interests,
+                           @RequestParam String interests,
                            Model model) {
         model.addAttribute("name", name);
         model.addAttribute("gender", gender);
@@ -109,4 +117,208 @@ public class RestController {
         return "_02_restapi/res";
     }
 
+    // ============== DTO 이용 ==============
+    // 1. GET 요청
+    @GetMapping("/dto/res1")
+    @ResponseBody
+    public String dtoRes1(@ModelAttribute UserDTO userDTO) {
+        // 변수로 값을 하나씩 가져오는게 아니라 DTO 객체에 담아서 가져오기
+        // @ModelAttribute : HTML 폼 데이터를 컨트롤러로 전달할 때 객체 매핑하는 어노테이션
+        // -> 매핑 : setter 함수 실행
+        return userDTO.getName() + " " + userDTO.getAge();
+    } // O
+
+    // 2. POST 요청
+    @PostMapping("/dto/res2")
+    @ResponseBody
+    public String dtoRes2(UserDTO userDTO) {
+        // @ModelAttribute 어노테이션이 없을 때에는 자동 추가됨
+        return userDTO.getName() + " " + userDTO.getAge();
+    } // O
+
+    @PostMapping("/dto/res3")
+    @ResponseBody
+    public String dtoRes3(@RequestBody UserDTO userDTO) {
+        // @RequestBody 어노테이션
+        // - 요청의 본문에 있는 데이터 (req.body)를 읽어와서 객체에 매핑
+        // - 여기서 매핑? 필드 값에 값을 주입
+        // - 전달 받은 요청의 형식이 json or xml 타입일 때만 가능
+        // "일반 폼 전송" ()
+        // 따라서 @RequestBody 어노테이션 사용 시 오류 발생함
+        return userDTO.getName() + " " + userDTO.getAge();
+    } // X
+
+// 실습 DTO 이용하기 – 일반 폼
+//    @GetMapping("/dto/res1")
+//    @ResponseBody
+//    public String dtoRes1(@ModelAttribute UserDTO userDTO) {
+//        System.out.println("[GET] userDTO (name) = " + userDTO.getName());
+//        System.out.println("[GET] userDTO (age) = " + userDTO.getAge());
+//        return userDTO.getName() + " " + userDTO.getAge();
+//    }
+//    @PostMapping("/dto/res2")
+//    @ResponseBody
+//    public String dtoRes2(UserDTO userDTO) {
+//        System.out.println("[POST] userDTO (name) = " + userDTO.getName());
+//        System.out.println("[POST] userDTO (age) = " + userDTO.getAge());
+//        return userDTO.getName() + " " + userDTO.getAge();
+//    }
+//    @PostMapping("/dto/res3")
+//    @ResponseBody
+//    public String dtoRes22(@RequestBody UserDTO userDTO) {
+//        System.out.println("[POST] userDTO (name) = " + userDTO.getName());
+//        System.out.println("[POST] userDTO (age) = " + userDTO.getAge());
+//        return userDTO.getName() + " " + userDTO.getAge();
+//    }
+
+    // ============== VO 이용 ==============
+    // 1. GET 요청
+    // vo = null (ModelAttribute => setter 함수 실행)
+    // setter 함수가 없어 기본 값 출력 (null 0)
+    @GetMapping("/vo/res1")
+    @ResponseBody
+    public String voRes1(@ModelAttribute UserVO userVO) {
+        return userVO.getName() + " " + userVO.getAge(); // null 0
+    } // O (null 0)
+
+    // 2. POST 요청
+    @PostMapping("/vo/res2")
+    @ResponseBody
+    public String voRes2(UserVO userVO) {
+        return userVO.getName() + " " + userVO.getAge(); // null 0
+    } // O (null 0)
+
+    @PostMapping("/vo/res3")
+    @ResponseBody
+    public String voRes3(@RequestBody UserVO userVO) {
+        return userVO.getName() + " " + userVO.getAge(); // null 0
+    } // X (type=Unsupported Media Type, status=415)
+
+//    실습. VO 이용하기 – 일반 폼
+//    @GetMapping("/vo/res1")
+//    @ResponseBody
+//    public String voRes1(@ModelAttribute UserVO userVO) {
+//        System.out.println("[GET] userVO (name) = " + userVO.getName());
+//        System.out.println("[GET] userVO (age) = " + userVO.getAge());
+//        return userVO.getName() + " " + userVO.getAge();
+//    }
+//    @PostMapping("/vo/res2")
+//    @ResponseBody
+//    public String voRes2(UserVO userVO) {
+//        System.out.println("[POST] userVO (name) = " + userVO.getName());
+//        System.out.println("[POST] userVO (age) = " + userVO.getAge());
+//        return userVO.getName() + " " + userVO.getAge();
+//    }
+//    @PostMapping("/vo/res3")
+//    @ResponseBody
+//    public String voRes3(@RequestBody UserVO userVO) {
+//        System.out.println("[POST] userVO (name) = " + userVO.getName());
+//        System.out.println("[POST] userVO (age) = " + userVO.getAge());
+//        return userVO.getName() + " " + userVO.getAge();
+//    }
+
+    // ============== DTO 이용 whit. axios ==============
+    @GetMapping("/axios/res1")
+    @ResponseBody
+    public String axiosRes1(@RequestParam String name, @RequestParam int age) {
+        return "이름 : " + name + " 나이 : " + age;
+    } // o
+
+    @GetMapping("/axios/res2")
+    @ResponseBody
+    public String axiosRes2(UserDTO userDTO) {
+        return "이름 : " + userDTO.getName() + " 나이 : " + userDTO.getAge();
+    } // o
+
+    @PostMapping("/axios/res3")
+    @ResponseBody
+    // axios 로 값을 전달하게 될 경우, Post 로 값을 보내면 파라미터로 값이 들어오지 않는다
+    // @RequestParam request true 가 기본
+    // 값이 들어오지 않는데 request true 여서 에러
+    public String axiosRes3(@RequestParam String name, @RequestParam int age) {
+        return "이름 : " + name + " 나이 : " + age;
+    } // x (error)
+
+    @PostMapping("/axios/res4")
+    @ResponseBody
+    // Axios 로 Post 요청을 보낼 경우 본문에 데이터가 들어가기에 @ModelAttribute 가 확인 불가 -> null
+    public String axiosRes4( UserDTO userDTO) {
+        return "이름 : " + userDTO.getName() + " 나이 : " + userDTO.getAge();
+    } // o (null 0)
+
+    @PostMapping("/axios/res5")
+    @ResponseBody
+    public String axiosRes5(@RequestBody UserDTO userDTO) {
+        return "이름 : " + userDTO.getName() + " 나이 : " + userDTO.getAge();
+    } // o
+
+//    실습. Axios - DTO
+//    @GetMapping("/axios/res1")
+//    @ResponseBody
+//    public String axiosRes1(@RequestParam String name, @RequestParam String age) {
+//        System.out.println("[GET] axios (name) = " + name);
+//        System.out.println("[GET] axios (age) = " + age);
+//        return "이름: " + name + ", 나이: " + age;
+//    }
+//    @GetMapping("/axios/res2")
+//    @ResponseBody
+//    public String axiosRes2(UserDTO userDTO) {
+//        System.out.println("[GET] axios and dto (name) = " + userDTO.getName());
+//        System.out.println("[GET] axios and dto (age) = " + userDTO.getAge());
+//        return "이름: " + userDTO.getName() + ", 나이: " + userDTO.getAge();
+//    }
+//    @PostMapping("/axios/res3")
+//    @ResponseBody
+//    public String axiosRes3(@RequestParam String name, @RequestParam String age) {
+//        System.out.println("[POST] axios (name) = " + name);
+//        System.out.println("[POST] axios (age) = " + age);
+//        return "이름: " + name + ", 나이: " + age;
+//    }
+//    @PostMapping("/axios/res4")
+//    @ResponseBody
+//    public String axiosRes4(UserDTO userDTO) {
+//        System.out.println("[POST] axios and dto (name) = " + userDTO.getName());
+//        System.out.println("[POST] axios and dto (age) = " + userDTO.getAge());
+//        return "이름:" + userDTO.getName() + ", 나이: " + userDTO.getAge();
+//    }
+//    @PostMapping("/axios/res5")
+//    @ResponseBody
+//    public String axiosRes5(@RequestBody UserDTO userDTO) {
+//        System.out.println("[POST] axios and dto (name) = " + userDTO.getName());
+//        System.out.println("[POST] axios and dto (age) = " + userDTO.getAge());
+//        return "이름:" + userDTO.getName() + ", 나이: " + userDTO.getAge();
+//    }
+
+    // ============ VO 이용 ============
+    @GetMapping("/axios/vo/res1")
+    @ResponseBody
+    public String axiosVoRes1(@RequestParam String name, @RequestParam int age) {
+        return "이름: " + name + ", 나이: " + age;
+    } // o
+
+    @GetMapping("/axios/vo/res2")
+    @ResponseBody
+    public String axiosVoRes2(UserVO userVO) {
+        return "이름: " + userVO.getName() + ", 나이: " + userVO.getAge();
+    } // o (null, 0)
+
+    @PostMapping("/axios/vo/res3")
+    @ResponseBody
+    public String axiosVoRes3(@RequestParam String name, @RequestParam String age) {
+        return "이름: " + name + ", 나이: " + age;
+    } // error
+
+    @PostMapping("/axios/vo/res4")
+    @ResponseBody
+    public String axiosVoRes4(UserVO userVO) {
+        return "이름:" + userVO.getName() + ", 나이: " + userVO.getAge();
+    } // o
+
+    @PostMapping("/axios/vo/res5")
+    @ResponseBody
+    // @RequestBody 로 값을 전달할 때, setter 없이도 값이 들어간다.
+    // setter 함수 실행이 아니라 각각의 필드 (변수)에 직접저그로 값을 주입하면서 매핑
+    public String axiosVoRes5(@RequestBody UserVO userVO) {
+        return "이름:" + userVO.getName() + ", 나이: " + userVO.getAge();
+    } // o
 }

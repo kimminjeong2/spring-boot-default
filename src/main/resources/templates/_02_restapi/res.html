@@ -5,23 +5,22 @@
     <title>Response</title>
 </head>
 <body>
-<!--<h1>Res 결과 확인!</h1>-->
-<!--<ul>-->
-<!--    <li>이름 : <strong th:text="${name}"></strong></li>-->
-<!--    <li>나이 : <strong th:text="${age}"></strong></li>-->
-<!--</ul>-->
-<!--<a href="/">홈으로 이동</a>-->
+<h1>Res 결과 확인!</h1>
+<ul>
+    <li>이름 : <strong th:text="${name}"></strong></li>
+    <li>나이 : <strong th:text="${age}"></strong></li>
+</ul>
+<a href="/">홈으로 이동</a>
 
 <!--실습-->
 <!--<h1>내 이름은 <span th:text="${name}"></span></h1>-->
 <!--<h1>내 나이는 <span th:text="${age}"></span></h1>-->
-<p th:text="'이름 : ' + ${name}"></p>
-<p th:text="'성별 : ' + ${gender}"></p>
-<p th:text="'생년월일 : ' + ${birthDate}"></p>
-<p>
-    관심사 :
-    <span th:if="${interests != null}" th:text="${#strings.join(interests, ', ')}"></span>
-</p>
+
+<!--실습2-->
+<!--<p th:text="'이름 : ' + ${name}"></p>-->
+<!--<p th:text="'성별 : ' + ${gender}"></p>-->
+<!--<p th:text="'생년월일 : ' + ${birthDate}"></p>-->
+<!--<p th:text="'관심사 : ' + ${interests}"></p>-->
 
 </body>
 </html>
